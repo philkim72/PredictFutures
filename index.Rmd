@@ -1,6 +1,6 @@
 --- 
-title: "YOUR TITLE HERE"
-author: "YOUR NAMES HERE"
+title: "Predict Futures"
+author: "Phillip Kim (ppk2003) & Jon Tse (jlt93)"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 ---
