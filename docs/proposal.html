@@ -23,7 +23,7 @@
 <meta name="author" content="Phillip Kim (ppk2003) &amp; Jon Tse (jlt93)" />
 
 
-<meta name="date" content="2022-10-29" />
+<meta name="date" content="2022-10-31" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -110,9 +110,31 @@
 <h1><span class="header-section-number">Chapter 2</span> Proposal<a href="proposal.html#proposal" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <div id="research-topic" class="section level2 hasAnchor" number="2.1">
 <h2><span class="header-section-number">2.1</span> Research topic<a href="proposal.html#research-topic" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>S&amp;P 500 Index is a market-capitalization-weighted index of many of the largest US stocks. As it covers over 80% the market capitalization of the US market, it is widely considered to represent the US market in the global financial asset allocators. As a result, the E-Mini S&amp;P 500 Futures is also one of the most commonly used futures for investors and traders to gain exposure to the US market. Most commonly referred as ES futures, it is available for trading each week from each 6pm ET Sunday to 5pm ET Friday (including a short halt each day from 4:15-4:30pm and 5pm to 6pm).
+Source: <a href="https://www.thebalancemoney.com/profile-of-the-sandp-500-es-futures-market-1031271" class="uri">https://www.thebalancemoney.com/profile-of-the-sandp-500-es-futures-market-1031271</a></p>
+<p>Anecdotally, we have observed that on some Fridays, the ES futures exhibit a large rally in the final 30 minutes heading into the week’s 5pm close. The topic we want to explore in this project is to examine if this is a regular occurrence, as well as if this pattern appears conditional on previous S&amp;P 500 market return conditions, market valuation, future’s trading volume and net positioning. In addition, we will examine if a market return profile is conditional on potential market moving macro-economic events such as rate hikes from the Federal Reserve, or announcements of economic data such as ISM Manufacturing Index.
+<img src="https://user-images.githubusercontent.com/8092998/198921350-437d92ef-0dab-4785-8919-57fe7ebf670b.png" alt="image" /></p>
 </div>
 <div id="data-availability" class="section level2 hasAnchor" number="2.2">
 <h2><span class="header-section-number">2.2</span> Data availability<a href="proposal.html#data-availability" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>E-mini S&amp;P 500 Futures</p>
+<p>In order to investigate the return profile of the E-mini S&amp;P 500 futures, we need historical pricing and volume data. Bloomberg Terminal is the application used by many professionals in the financial industries. It aggregates and distributes market data, news, among many things, and is valuable resource for us to retrieve market related data in our project.</p>
+<p>We plan to use Bloomberg Terminal accessible through the University’s Library Terminals, to download pricing and volume data for E-mini S&amp;P 500 futures. Bloomberg has various access methods to its data, and we intend on using BDH function calls to pull “Bloomberg Data History”. We anticipate to use Excel to call for the necessary historical pricing data, as such data will be downloaded into a spreadsheet format.
+The E-mini S&amp;P 500 futures identifier is ES1 Index, the Generic ES future security that Bloomberg tracks and will provide continuous pricing going back in history. Bloomberg will only provide 140 days of historical intraday prices when downloading from Excel, and 240 days of intraday prices from the Terminal. That is, if today is October 30, 2022, only prices up to 240 days ago is available from the Terminal.</p>
+<p>The data fields we intend on accessing include the following, using the respective Bloomberg codes:
+- 15 minute intraday prices for each Friday going back in history (LAST_PRICE)
+- Daily price (LAST_PRICE)
+- Daily volume (VOLUME)</p>
+<p>S&amp;P 500 Market Valuation</p>
+<p>Similar to E-mini S&amp;P 500 futures, we can also retrieve market data pertaining S&amp;P 500 data through the Bloomberg Terminal. Specifically, we are interested in the market valuation of the market, as measured by the Price to Earnings Ratio with the Bloomberg code: PE_RATIO.</p>
+<p>Macro-Economic Data</p>
+<p>Federal Funds Rate</p>
+<p>Federal Funds Rate is the “interest rate depository institutions charge each other for overnight loans of funds”, or the benchmark of the price of borrowing money between financial institutions. This rate is determined by the Federal Reserve, and can be updated after each of the 8 pre-scheduled meetings by the Federal Open Market Committee (FOMC). Banks transact with each other at this rate, and the weighted average rate for all of these is the “Effective Federal Funds Rate.” This is one of the key data points for the US economy, as a lower rate incentivizes spending and stimulates economic activity. Higher rates, on the other hand, does the opposite, including slowing the economy and inflation.
+The Effective Federal Funds Rate can be downloaded from the FRED Economic Data website, <a href="https://fred.stlouisfed.org/series/DFF" class="uri">https://fred.stlouisfed.org/series/DFF</a>. It is a daily data series, available 7 days, and has history going back to 1955. It can be downloaded into an Excel spreadsheet or a CSV file.</p>
+<p>ISM Manufacturing Index</p>
+<p>The ISM Manufacturing Index is a monthly survey of “purchasing managers at more than 300 manufacturing firms”, available on the first business day of each month. It is a key indicator of the state of US economic activity, and its release can impact markets.
+This monthly series is also available on Bloomberg Terminal, under the code “NAPMPMI Index”. It’s earliest data available is on 1/31/1948. It can be exported directly from the Terminal into an Excel or a csv file.
+<a href="https://www.investopedia.com/terms/i/ism-mfg.asp" class="uri">https://www.investopedia.com/terms/i/ism-mfg.asp</a><img src="https://user-images.githubusercontent.com/8092998/198921376-b7a446ca-141a-421f-8da7-41c176749d72.png" alt="image" /></p>
 
 </div>
 </div>
