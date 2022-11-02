@@ -20,7 +20,7 @@ The E-mini S&P 500 futures identifier is ES1 Index, the Generic ES future securi
 Pricing and volume
 
 The data fields we intend on accessing include the following, using the respective Bloomberg codes:
-- 15 minute intraday prices for each Friday going back inavailable history (LAST_PRICE)
+- 15 minute intraday prices for each Friday going back in available history (LAST_PRICE)
 - Daily volume (VOLUME)
 	
 Net Positioning

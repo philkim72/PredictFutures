@@ -124,7 +124,7 @@ Source: <a href="https://www.thebalancemoney.com/profile-of-the-sandp-500-es-fut
 <p>The E-mini S&amp;P 500 futures identifier is ES1 Index, the Generic ES future security that Bloomberg tracks and will provide continuous pricing going back in history. Bloomberg will only provide 140 days of historical intraday prices when downloading from Excel, and 240 days of intraday prices from the Terminal. That is, if today is October 30, 2022, only prices up to 240 days ago is available from the Terminal. This will limit our study to approximately the past 1 year of trading days.</p>
 <p>Pricing and volume</p>
 <p>The data fields we intend on accessing include the following, using the respective Bloomberg codes:
-- 15 minute intraday prices for each Friday going back inavailable history (LAST_PRICE)
+- 15 minute intraday prices for each Friday going back in available history (LAST_PRICE)
 - Daily volume (VOLUME)</p>
 <p>Net Positioning</p>
 <p>The net-positioning of the E-mini S&amp;P 500 futures indicate the market sentiment based on whether the net position is from very long to very short. We will download this from the Bloomberg Terminal using IMMOENCN Index, which gives a weekly series of non-commercial net-positioning data for our SP500 futures. This data is collected on a weekly basis, so the date associated with the data point may appear on a lag. That is, the data for 10/25/2022 may not be available until a few days after 10/25/2022. We plot the relationship visually knowing that there is a lag in when the associated data becomes available.</p>
