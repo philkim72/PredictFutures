@@ -1,0 +1,72 @@
+---
+title: "GR5702 Fall 2022 Final Project"
+author: "Phillip Kim (ppk2003) and Yingjie Qu (yq2350)"
+output:
+  pdf_document: default
+  html_document:
+    fig_width: 5
+    fig_height: 3.5
+---
+
+
+```{r setup, include=FALSE}
+# this prevents package loading message from appearing in the rendered version of your problem set
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE)
+```
+
+### 1. Load the Data
+
+
+```{r}
+library("lubridate")
+library("readxl")
+es1_df <- read_excel("Bloomberg Data PK.xlsx",sheet = "ES1 COMPLETE")
+es1_df$hms <- format(es1_df$DATE, "%H:%M:%S")
+es1_df$ymd <- format(es1_df$DATE, "%Y-%m-%d")
+es1_eod <- subset(es1_df, hms >= "15:00:00" & hms <= "16:00:00" )
+date_list <- unique(es1_eod$ymd)
+es1_eod
+es1_eod$CLOSE[es1_eod$ymd == "2022-10-28" & es1_eod$hms == "16:00:00"]
+```
+```{r}
+days_list <- list()
+t15_list <- list()
+t30_list <- list()
+t45_list <- list()
+t60_list <- list()
+
+
+for (x in date_list) {
+  close <- es1_eod$CLOSE[es1_eod$ymd == x & es1_eod$hms == "16:00:00"]
+  t15 <- es1_eod$CLOSE[es1_eod$ymd == x & es1_eod$hms == "15:45:00"]
+  t30 <- es1_eod$CLOSE[es1_eod$ymd == x & es1_eod$hms == "15:30:00"]
+  t45 <- es1_eod$CLOSE[es1_eod$ymd == x & es1_eod$hms == "15:15:00"]
+  t60 <- es1_eod$CLOSE[es1_eod$ymd == x & es1_eod$hms == "15:00:00"]
+  
+  t15_return <- (close / t15) - 1
+  t30_return <- (close / t30) - 1
+  t45_return <- (close / t45) - 1
+  t60_return <- (close / t60) - 1
+  
+  days_list <- append(days_list, x)
+  t15_list <- append(t15_list, t15_return)
+  t30_list <- append(t30_list, t30_return)
+  t45_list <- append(t45_list, t45_return)
+  t60_list <- append(t60_list, t60_return)
+}
+print(length(days_list))
+print(length(t15_list))
+print(length(t30_list))
+print(length(t45_list))
+print(length(t60_list))
+
+
+eod_returns <- data.frame(unlist(days_list), unlist(t15_list), unlist(t30_list), unlist(t45_list), unlist(t60_list))
+names(eod_returns) <- c("Date", "t15 return", "t30 return", "t45 return", "t60 return")
+eod_returns
+```
+
+
+
+
