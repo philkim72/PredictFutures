@@ -24,7 +24,7 @@ library("readxl")
 es1_df <- read_excel("Bloomberg Data PK.xlsx",sheet = "ES1 COMPLETE")
 es1_df$hms <- format(es1_df$DATE, "%H:%M:%S")
 es1_df$ymd <- format(es1_df$DATE, "%Y-%m-%d")
-es1_eod <- subset(es1_df, hms >= "15:00:00" & hms <= "16:00:00" )
+es1_eod <- subset(es1_df, hms >= "14:00:00" & hms <= "16:00:00" )
 date_list <- unique(es1_eod$ymd)
 es1_eod
 es1_eod$CLOSE[es1_eod$ymd == "2022-10-28" & es1_eod$hms == "16:00:00"]
@@ -35,6 +35,18 @@ t15_list <- list()
 t30_list <- list()
 t45_list <- list()
 t60_list <- list()
+t75_list <- list()
+t90_list <- list()
+t105_list <- list()
+t120_list <- list()
+s15_list <- list()
+s30_list <- list()
+s45_list <- list()
+s60_list <- list()
+s75_list <- list()
+s90_list <- list()
+s105_list <- list()
+s120_list <- list()
 
 
 for (x in date_list) {
@@ -43,30 +55,108 @@ for (x in date_list) {
   t30 <- es1_eod$CLOSE[es1_eod$ymd == x & es1_eod$hms == "15:30:00"]
   t45 <- es1_eod$CLOSE[es1_eod$ymd == x & es1_eod$hms == "15:15:00"]
   t60 <- es1_eod$CLOSE[es1_eod$ymd == x & es1_eod$hms == "15:00:00"]
+  t75 <- es1_eod$CLOSE[es1_eod$ymd == x & es1_eod$hms == "14:45:00"]
+  t90 <- es1_eod$CLOSE[es1_eod$ymd == x & es1_eod$hms == "14:30:00"]
+  t105 <- es1_eod$CLOSE[es1_eod$ymd == x & es1_eod$hms == "14:15:00"]
+  t120 <- es1_eod$CLOSE[es1_eod$ymd == x & es1_eod$hms == "14:00:00"]
   
   t15_return <- (close / t15) - 1
   t30_return <- (close / t30) - 1
   t45_return <- (close / t45) - 1
   t60_return <- (close / t60) - 1
+  t75_return <- (close / t75) - 1
+  t90_return <- (close / t90) - 1
+  t105_return <- (close / t105) - 1
+  t120_return <- (close / t120) - 1
+  
+  s15_return <- (t105 / t120) - 1
+  s30_return <- (t90 / t120) - 1
+  s45_return <- (t75 / t120) - 1
+  s60_return <- (t60 / t120) - 1
+  s75_return <- (t45 / t120) - 1
+  s90_return <- (t30 / t120) - 1
+  s105_return <- (t15 / t120) - 1
+  s120_return <- (close / t120) - 1
   
   days_list <- append(days_list, x)
   t15_list <- append(t15_list, t15_return)
   t30_list <- append(t30_list, t30_return)
   t45_list <- append(t45_list, t45_return)
   t60_list <- append(t60_list, t60_return)
+  t75_list <- append(t75_list, t75_return)
+  t90_list <- append(t90_list, t90_return)
+  t105_list <- append(t105_list, t105_return)
+  t120_list <- append(t120_list, t120_return)
+  
+  s15_list <- append(s15_list, s15_return)
+  s30_list <- append(s30_list, s30_return)
+  s45_list <- append(s45_list, s45_return)
+  s60_list <- append(s60_list, s60_return)
+  s75_list <- append(s75_list, s75_return)
+  s90_list <- append(s90_list, s90_return)
+  s105_list <- append(s105_list, s105_return)
+  s120_list <- append(s120_list, s120_return)
 }
 print(length(days_list))
 print(length(t15_list))
 print(length(t30_list))
 print(length(t45_list))
 print(length(t60_list))
+print(length(t75_list))
+print(length(t90_list))
+print(length(t105_list))
+print(length(t120_list))
+print(length(s15_list))
+print(length(s30_list))
+print(length(s45_list))
+print(length(s60_list))
+print(length(s75_list))
+print(length(s90_list))
+print(length(s105_list))
+print(length(s120_list))
 
-
-eod_returns <- data.frame(unlist(days_list), unlist(t15_list), unlist(t30_list), unlist(t45_list), unlist(t60_list))
-names(eod_returns) <- c("Date", "t15 return", "t30 return", "t45 return", "t60 return")
+eod_returns <- data.frame(unlist(days_list), unlist(t15_list), unlist(t30_list), unlist(t45_list), unlist(t60_list), unlist(t75_list), unlist(t90_list), unlist(t105_list), unlist(t120_list), unlist(s15_list), unlist(s30_list), unlist(s45_list), unlist(s60_list), unlist(s75_list), unlist(s90_list), unlist(s105_list), unlist(s120_list))
+names(eod_returns) <- c("Date", "t15_return", "t30_return", "t45_return", "t60_return", "t75_return", "t90_return", "t105_return", "t120_return", "s15_return", "s30_return", "s45_return", "s60_return", "s75_return", "s90_return", "s105_return", "s120_return")
 eod_returns
 ```
+```{r}
+library(magrittr)
+library(tidyr)
+eod_returns2 = eod_returns %>%
+  pivot_longer(!Date, names_to = "Return_Type", values_to = "Return")
 
-
-
+eod_returns2$Day_of_Week <- with(eod_returns2, wday(eod_returns2$Date, label=TRUE))
+eod_returns2 <- eod_returns2[, c(1,4,2,3)]
+eod_returns2
+```
+```{r}
+library(ggplot2)
+eod_returns15 <- subset(eod_returns2, Return_Type == "t15_return" )
+p <- ggplot(eod_returns15, aes(x=Day_of_Week, y=Return)) + geom_boxplot()
+p
+```
+```{r}
+library(ggplot2)
+eod_returns30 <- subset(eod_returns2, Return_Type == "t30_return" )
+p <- ggplot(eod_returns30, aes(x=Day_of_Week, y=Return)) + geom_boxplot()
+p
+```
+```{r}
+library(ggplot2)
+eod_returns45 <- subset(eod_returns2, Return_Type == "t45_return" )
+p <- ggplot(eod_returns45, aes(x=Day_of_Week, y=Return)) + geom_boxplot()
+p
+```
+```{r}
+library(ggplot2)
+eod_returns60 <- subset(eod_returns2, Return_Type == "t60_return" )
+p <- ggplot(eod_returns60, aes(x=Day_of_Week, y=Return)) + geom_boxplot()
+p
+```
+```{r}
+library(ggplot2)
+eod_returnsmax <- subset(eod_returns2, Return_Type == "max_return" )
+p <- ggplot(eod_returnsmax, aes(x=Day_of_Week, y=Return)) + geom_boxplot()
+p
+```
 
