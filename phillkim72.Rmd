@@ -24,8 +24,9 @@ library("readxl")
 es1_df <- read_excel("Bloomberg Data PK.xlsx",sheet = "ES1 COMPLETE")
 es1_df$hms <- format(es1_df$DATE, "%H:%M:%S")
 es1_df$ymd <- format(es1_df$DATE, "%Y-%m-%d")
-es1_eod <- subset(es1_df, hms >= "14:00:00" & hms <= "16:00:00" )
+es1_eod <- subset(es1_df, (hms >= "14:00:00" & hms <= "16:00:00") )
 date_list <- unique(es1_eod$ymd)
+es1_eod <- subset(es1_df, (hms >= "14:00:00" & hms <= "16:00:00") | hms == "09:30:00")
 es1_eod
 es1_eod$CLOSE[es1_eod$ymd == "2022-10-28" & es1_eod$hms == "16:00:00"]
 ```
@@ -39,6 +40,10 @@ t75_list <- list()
 t90_list <- list()
 t105_list <- list()
 t120_list <- list()
+
+pre_t15_list <- list()
+pre_t30_list <- list()
+
 s15_list <- list()
 s30_list <- list()
 s45_list <- list()
@@ -59,6 +64,7 @@ for (x in date_list) {
   t90 <- es1_eod$CLOSE[es1_eod$ymd == x & es1_eod$hms == "14:30:00"]
   t105 <- es1_eod$CLOSE[es1_eod$ymd == x & es1_eod$hms == "14:15:00"]
   t120 <- es1_eod$CLOSE[es1_eod$ymd == x & es1_eod$hms == "14:00:00"]
+  open <- es1_eod$CLOSE[es1_eod$ymd == x & es1_eod$hms == "09:30:00"]
   
   t15_return <- (close / t15) - 1
   t30_return <- (close / t30) - 1
@@ -68,6 +74,9 @@ for (x in date_list) {
   t90_return <- (close / t90) - 1
   t105_return <- (close / t105) - 1
   t120_return <- (close / t120) - 1
+  
+  pre_t15_return <- (t15 / open) - 1
+  pre_t30_return <- (t30 / open) - 1
   
   s15_return <- (t105 / t120) - 1
   s30_return <- (t90 / t120) - 1
@@ -88,6 +97,9 @@ for (x in date_list) {
   t105_list <- append(t105_list, t105_return)
   t120_list <- append(t120_list, t120_return)
   
+  pre_t15_list <- append(pre_t15_list, pre_t15_return)
+  pre_t30_list <- append(pre_t30_list, pre_t30_return)
+  
   s15_list <- append(s15_list, s15_return)
   s30_list <- append(s30_list, s30_return)
   s45_list <- append(s45_list, s45_return)
@@ -97,28 +109,20 @@ for (x in date_list) {
   s105_list <- append(s105_list, s105_return)
   s120_list <- append(s120_list, s120_return)
 }
-print(length(days_list))
-print(length(t15_list))
-print(length(t30_list))
-print(length(t45_list))
-print(length(t60_list))
-print(length(t75_list))
-print(length(t90_list))
-print(length(t105_list))
-print(length(t120_list))
-print(length(s15_list))
-print(length(s30_list))
-print(length(s45_list))
-print(length(s60_list))
-print(length(s75_list))
-print(length(s90_list))
-print(length(s105_list))
-print(length(s120_list))
 
-eod_returns <- data.frame(unlist(days_list), unlist(t15_list), unlist(t30_list), unlist(t45_list), unlist(t60_list), unlist(t75_list), unlist(t90_list), unlist(t105_list), unlist(t120_list), unlist(s15_list), unlist(s30_list), unlist(s45_list), unlist(s60_list), unlist(s75_list), unlist(s90_list), unlist(s105_list), unlist(s120_list))
-names(eod_returns) <- c("Date", "t15_return", "t30_return", "t45_return", "t60_return", "t75_return", "t90_return", "t105_return", "t120_return", "s15_return", "s30_return", "s45_return", "s60_return", "s75_return", "s90_return", "s105_return", "s120_return")
+print(length(pre_t15_list))
+
+eod_returns <- data.frame(unlist(days_list), unlist(t15_list), unlist(t30_list), unlist(t45_list), unlist(t60_list), unlist(t75_list), unlist(t90_list), unlist(t105_list), unlist(t120_list), unlist(pre_t15_list), unlist(pre_t30_list), unlist(s15_list), unlist(s30_list), unlist(s45_list), unlist(s60_list), unlist(s75_list), unlist(s90_list), unlist(s105_list), unlist(s120_list))
+names(eod_returns) <- c("Date", "t15_return", "t30_return", "t45_return", "t60_return", "t75_return", "t90_return", "t105_return", "t120_return", "pre_t15_return", "pre_t30_return", "s15_return", "s30_return", "s45_return", "s60_return", "s75_return", "s90_return", "s105_return", "s120_return")
+eod_returns$Day_of_Week <- with(eod_returns, wday(eod_returns$Date, label=TRUE))
 eod_returns
 ```
+```{r}
+es1_volume <- read_excel("Bloomberg Data PK.xlsx",sheet = "ES1 VOLUME")
+es1_volume
+```
+
+
 ```{r}
 library(magrittr)
 library(tidyr)
@@ -159,4 +163,54 @@ eod_returnsmax <- subset(eod_returns2, Return_Type == "max_return" )
 p <- ggplot(eod_returnsmax, aes(x=Day_of_Week, y=Return)) + geom_boxplot()
 p
 ```
+```{r}
+library(ggplot2)
+p <- ggplot(eod_returns, aes(x=s15_return, y=t105_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0)
+p
+```
+```{r}
+library(ggplot2)
+p <- ggplot(eod_returns, aes(x=s30_return, y=t90_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0)
+p
+```
 
+
+```{r}
+library(ggplot2)
+p <- ggplot(eod_returns, aes(x=s45_return, y=t75_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0)
+p
+```
+```{r}
+library(ggplot2)
+p <- ggplot(eod_returns, aes(x=s60_return, y=t60_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0)
+p
+```
+
+```{r}
+library(ggplot2)
+p <- ggplot(eod_returns, aes(x=s75_return, y=t45_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0)
+p
+```
+
+```{r}
+library(ggplot2)
+p <- ggplot(eod_returns, aes(x=s90_return, y=t30_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0)
+p
+```
+
+```{r}
+library(ggplot2)
+p <- ggplot(eod_returns, aes(x=s105_return, y=t15_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0)
+p
+```
+```{r}
+library(ggplot2)
+p <- ggplot(eod_returns, aes(x=pre_t15_return, y=t15_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0)
+p
+```
+
+```{r}
+library(ggplot2)
+p <- ggplot(eod_returns, aes(x=pre_t30_return, y=t30_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0)
+p
+```
