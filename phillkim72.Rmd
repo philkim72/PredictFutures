@@ -118,6 +118,15 @@ eod_returns$Day_of_Week <- with(eod_returns, wday(eod_returns$Date, label=TRUE))
 eod_returns
 ```
 ```{r}
+library(lubridate)
+eod_returns1 <- eod_returns
+#eod_returns1[['Date']] <- as.POSIXct(eod_returns1[,c('Date')], format = "%Y-%m-%d")
+colnames(eod_returns1)[which(names(eod_returns1) == "Date")] <- "DATE"
+
+eod_returns1
+```
+
+```{r}
 library(plyr)
 es1_volume <- read_excel("Bloomberg Data PK.xlsx",sheet = "ES1 VOLUME")
 vix <- read_excel("Bloomberg Data PK.xlsx",sheet = "VIX")
@@ -129,33 +138,35 @@ combined
 ```
 ```{r}
 netpos <- read_excel("Bloomberg Data PK.xlsx",sheet = "ES1 NET POSITION")
-netpos[which.min(abs(combined$DATE - netpos$DATE)),]
 
-#combined$ES1_NET_POSITION <- netpos[which.min(abs(combined$DATE - netpos$DATE)),]
-#combined
-```
-
-```{r}
-netpos <- read_excel("Bloomberg Data PK.xlsx",sheet = "ES1 NET POSITION")
-
-#netpos$Date <- format(netpos$DATE, "%Y-%m-%d")
-#netpos <- netpos[,c(3,2)]
-netpos
+combined1 = transform(combined, ES1_NET_POSITION = netpos[max.col(-abs(outer(DATE, netpos$DATE, `-`))), "ES1_NET_POSITION"])
+combined1
 ```
 ```{r}
-full_table <- merge(eod_returns, combined, by = "Date")
-drop_cols <- c("DATE")
-full_table <- full_table[,!(names(full_table) %in% drop_cols)]
+aaii <- read_excel("Bloomberg Data PK.xlsx",sheet = "AAII")
+
+combined2 = transform(combined1, BEAR = aaii[max.col(-abs(outer(DATE, netpos$DATE, `-`))), "BEAR"])
+combined2 = transform(combined2, NEUTRAL = aaii[max.col(-abs(outer(DATE, netpos$DATE, `-`))), "NEUTRAL"])
+combined2 = transform(combined2, BULL = aaii[max.col(-abs(outer(DATE, netpos$DATE, `-`))), "BULL"])
+combined2$DATE <- format(combined2$DATE, "%Y-%m-%d")
+
+combined2
+```
+```{r}
+full_table <- merge(eod_returns1, combined2, by = "DATE")
+#drop_cols <- c("Date")
+#full_table <- full_table[,!(names(full_table) %in% drop_cols)]
 full_table
 ```
 
 ```{r}
+# This Pivot Longer function is not necessary
 library(magrittr)
 library(tidyr)
-eod_returns2 = eod_returns %>%
-  pivot_longer(!Date, names_to = "Return_Type", values_to = "Return")
+eod_returns2 = eod_returns1 %>%
+  pivot_longer(!c("DATE", "Day_of_Week"), names_to = "Return_Type", values_to = "Return")
 
-eod_returns2$Day_of_Week <- with(eod_returns2, wday(eod_returns2$Date, label=TRUE))
+eod_returns2$Day_of_Week <- with(eod_returns2, wday(eod_returns2$DATE, label=TRUE))
 eod_returns2 <- eod_returns2[, c(1,4,2,3)]
 eod_returns2
 ```
