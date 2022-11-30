@@ -145,15 +145,24 @@ combined1
 ```{r}
 aaii <- read_excel("Bloomberg Data PK.xlsx",sheet = "AAII")
 
-combined2 = transform(combined1, BEAR = aaii[max.col(-abs(outer(DATE, netpos$DATE, `-`))), "BEAR"])
-combined2 = transform(combined2, NEUTRAL = aaii[max.col(-abs(outer(DATE, netpos$DATE, `-`))), "NEUTRAL"])
-combined2 = transform(combined2, BULL = aaii[max.col(-abs(outer(DATE, netpos$DATE, `-`))), "BULL"])
-combined2$DATE <- format(combined2$DATE, "%Y-%m-%d")
+combined2 = transform(combined1, BEAR = aaii[max.col(-abs(outer(DATE, aaii$DATE, `-`))), "BEAR"])
+combined2 = transform(combined2, NEUTRAL = aaii[max.col(-abs(outer(DATE, aaii$DATE, `-`))), "NEUTRAL"])
+combined2 = transform(combined2, BULL = aaii[max.col(-abs(outer(DATE, aaii$DATE, `-`))), "BULL"])
 
 combined2
 ```
 ```{r}
-full_table <- merge(eod_returns1, combined2, by = "DATE")
+ism <- read_excel("Bloomberg Data PK.xlsx",sheet = "ISM")
+
+combined3 = transform(combined2, ISM_MAN = ism[max.col(-abs(outer(DATE, ism$DATE, `-`))), "ISM_MAN"])
+combined3 = transform(combined3, ISM_SER = ism[max.col(-abs(outer(DATE, ism$DATE, `-`))), "ISM_SER"])
+
+combined3$DATE <- format(combined2$DATE, "%Y-%m-%d")
+
+combined3
+```
+```{r}
+full_table <- merge(eod_returns1, combined3, by = "DATE")
 #drop_cols <- c("Date")
 #full_table <- full_table[,!(names(full_table) %in% drop_cols)]
 full_table
