@@ -118,10 +118,36 @@ eod_returns$Day_of_Week <- with(eod_returns, wday(eod_returns$Date, label=TRUE))
 eod_returns
 ```
 ```{r}
+library(plyr)
 es1_volume <- read_excel("Bloomberg Data PK.xlsx",sheet = "ES1 VOLUME")
-es1_volume
+vix <- read_excel("Bloomberg Data PK.xlsx",sheet = "VIX")
+spratio <- read_excel("Bloomberg Data PK.xlsx",sheet = "S&P PE RATIO")
+fedfunds <- read_excel("Bloomberg Data PK.xlsx",sheet = "FED FUNDS EFF")
+
+combined <- join_all(list(es1_volume, vix, spratio, fedfunds), by='DATE', type='inner')
+combined
+```
+```{r}
+netpos <- read_excel("Bloomberg Data PK.xlsx",sheet = "ES1 NET POSITION")
+netpos[which.min(abs(combined$DATE - netpos$DATE)),]
+
+#combined$ES1_NET_POSITION <- netpos[which.min(abs(combined$DATE - netpos$DATE)),]
+#combined
 ```
 
+```{r}
+netpos <- read_excel("Bloomberg Data PK.xlsx",sheet = "ES1 NET POSITION")
+
+#netpos$Date <- format(netpos$DATE, "%Y-%m-%d")
+#netpos <- netpos[,c(3,2)]
+netpos
+```
+```{r}
+full_table <- merge(eod_returns, combined, by = "Date")
+drop_cols <- c("DATE")
+full_table <- full_table[,!(names(full_table) %in% drop_cols)]
+full_table
+```
 
 ```{r}
 library(magrittr)
