@@ -169,7 +169,6 @@ full_table
 ```
 
 ```{r}
-# This Pivot Longer function is not necessary
 library(magrittr)
 library(tidyr)
 eod_returns2 = eod_returns1 %>%
