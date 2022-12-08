@@ -169,6 +169,7 @@ full_table
 ```
 
 ```{r}
+#Pivot Longer for Data (Not necessarily needed)
 library(magrittr)
 library(tidyr)
 eod_returns2 = eod_returns1 %>%
@@ -202,12 +203,7 @@ eod_returns60 <- subset(eod_returns2, Return_Type == "t60_return" )
 p <- ggplot(eod_returns60, aes(x=Day_of_Week, y=Return)) + geom_boxplot()
 p
 ```
-```{r}
-library(ggplot2)
-eod_returnsmax <- subset(eod_returns2, Return_Type == "max_return" )
-p <- ggplot(eod_returnsmax, aes(x=Day_of_Week, y=Return)) + geom_boxplot()
-p
-```
+
 ```{r}
 library(ggplot2)
 p <- ggplot(eod_returns, aes(x=s15_return, y=t105_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0)
@@ -259,3 +255,40 @@ library(ggplot2)
 p <- ggplot(eod_returns, aes(x=pre_t30_return, y=t30_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0)
 p
 ```
+
+```{r}
+library(ggplot2)
+p <- ggplot(full_table, aes(x=VIX, y=t15_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0)
+p
+```
+
+```{r}
+library(ggplot2)
+p <- ggplot(full_table, aes(x=ES1_NET_POSITION, y=t15_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0)
+p
+```
+
+
+```{r}
+library(ggplot2)
+p <- ggplot(full_table, aes(x=ES1_VOLUME, y=t15_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0)
+p
+```
+
+```{r}
+library(ggplot2)
+p <- ggplot(full_table, aes(x=BEAR, y=t15_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0)
+p
+```
+
+
+
+```{r}
+library(ggplot2)
+p <- ggplot(full_table, aes(x=BULL, y=t15_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0)
+p
+```
+
+
+
+
