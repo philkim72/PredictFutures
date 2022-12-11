@@ -148,6 +148,7 @@ aaii <- read_excel("Bloomberg Data PK.xlsx",sheet = "AAII")
 combined2 = transform(combined1, BEAR = aaii[max.col(-abs(outer(DATE, aaii$DATE, `-`))), "BEAR"])
 combined2 = transform(combined2, NEUTRAL = aaii[max.col(-abs(outer(DATE, aaii$DATE, `-`))), "NEUTRAL"])
 combined2 = transform(combined2, BULL = aaii[max.col(-abs(outer(DATE, aaii$DATE, `-`))), "BULL"])
+combined2$NETBULL = combined2$BULL - combined2$BEAR 
 
 combined2
 ```
@@ -168,7 +169,7 @@ full_table <- merge(eod_returns1, combined3, by = "DATE")
 full_table
 ```
 
-```{r}
+```{r, eval=FALSE}
 #Pivot Longer for Data (Not necessarily needed)
 library(magrittr)
 library(tidyr)
@@ -186,6 +187,7 @@ p <- ggplot(eod_returns15, aes(x=Day_of_Week, y=Return)) + geom_boxplot()
 p
 ```
 ```{r}
+#THIS ONE SHOWS THAT THERE SEEMS TO BE LOWER END OF DAY RETURNS ON WEDNESDAYS
 library(ggplot2)
 eod_returns30 <- subset(eod_returns2, Return_Type == "t30_return" )
 p <- ggplot(eod_returns30, aes(x=Day_of_Week, y=Return)) + geom_boxplot()
@@ -245,6 +247,7 @@ p <- ggplot(eod_returns, aes(x=s105_return, y=t15_return)) + geom_point() + geom
 p
 ```
 ```{r}
+#THIS ONE SHOWS MEAN REVERSION OF LAST 15 MINUTES OF TRADING VS THE RETURNS UP UNTIL THAT POINT
 library(ggplot2)
 p <- ggplot(eod_returns, aes(x=pre_t15_return, y=t15_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0)
 p
@@ -257,8 +260,9 @@ p
 ```
 
 ```{r}
+#THIS ONE SHOWS HIGHER VIX CORRELATING WITH HIGHER VOLATILITY OF RETURNS
 library(ggplot2)
-p <- ggplot(full_table, aes(x=VIX, y=t15_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0)
+p <- ggplot(full_table, aes(x=VIX, y=t15_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0) + coord_cartesian(xlim = c(10, 40))
 p
 ```
 
@@ -277,7 +281,7 @@ p
 
 ```{r}
 library(ggplot2)
-p <- ggplot(full_table, aes(x=BEAR, y=t15_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0)
+p <- ggplot(full_table, aes(x=BEAR, y=t15_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0) + coord_cartesian(xlim = c(20, 70))
 p
 ```
 
@@ -285,10 +289,36 @@ p
 
 ```{r}
 library(ggplot2)
-p <- ggplot(full_table, aes(x=BULL, y=t15_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0)
+p <- ggplot(full_table, aes(x=BULL, y=t15_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0) + coord_cartesian(xlim = c(10, 50))
 p
 ```
-
+```{r}
+#THIS ONE SHOWS HIGHER NET BEARISH SENTIMENT CORRELATING WITH HIGHER VOLATILITY OF RETURNS
+library(ggplot2)
+p <- ggplot(full_table, aes(x=NETBULL, y=t15_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0)
+p
+```
+```{r}
+#THIS ONE SHOWS LOWER PE RATIOS CORRELATING WITH HIGHER VOLATILITY OF RETURNS
+library(ggplot2)
+p <- ggplot(full_table, aes(x=PE_RATIO, y=t15_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0) + coord_cartesian(xlim = c(15, 30))
+p
+```
+```{r}
+library(ggplot2)
+p <- ggplot(full_table, aes(x=FED_FUNDS, y=t15_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0)
+p
+```
+```{r}
+library(ggplot2)
+p <- ggplot(full_table, aes(x=ISM_MAN, y=t15_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0) + coord_cartesian(xlim = c(40, 70))
+p
+```
+```{r}
+library(ggplot2)
+p <- ggplot(full_table, aes(x=ISM_SER, y=t15_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0) + coord_cartesian(xlim = c(50, 70))
+p
+```
 
 
 
