@@ -35,7 +35,7 @@ eod_returns <- data.frame(unlist(days_list), unlist(pre_t15_list), unlist(t15_li
 names(eod_returns) <- c("Date", "pre_t15_return", "t15_return")
 eod_returns
 ```
-```{r}
+```{r, include=FALSE}
 library(lubridate)
 eod_returns_pos <- eod_returns[c("Date", "pre_t15_return","t15_return")]
 colnames(eod_returns_pos)[which(names(eod_returns_pos) == "Date")] <- "DATE"
