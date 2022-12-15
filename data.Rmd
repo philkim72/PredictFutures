@@ -6,7 +6,7 @@ The data we need for our study is available in Bloomberg Terminal Application, a
 
 The primary hurdle that we faced in data collection was realizing that the intraday pricing history for the SP500 futures was only trailing one year from the download date.  That will limit our dependent variable of each day's closing returns to only one year of data.
 
-### E-mini futures
+### E-mini Futures
 Bloomberg identifier: ES1 Index
 Fields: Price (LAST_PRICE) and Volume (VOLUME)
 Details: Choose 15 minute pricing interval going as far back as possible.  This returns us data from 10/17/2021 18:00 to 11/1/2022 10:15am, a total of 23585 rows.
