@@ -6,10 +6,9 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE)
 ```
 
-### 1. Load the Data
+```{r, include=FALSE}
+# load data
 
-
-```{r}
 library("lubridate")
 library("readxl")
 es1_df <- read_excel("Bloomberg Data PK.xlsx",sheet = "ES1 COMPLETE")
@@ -21,7 +20,7 @@ es1_eod <- subset(es1_df, (hms >= "14:00:00" & hms <= "16:00:00") | hms == "09:3
 es1_eod
 es1_eod$CLOSE[es1_eod$ymd == "2022-10-28" & es1_eod$hms == "16:00:00"]
 ```
-```{r}
+```{r, include=FALSE}
 days_list <- list()
 t15_list <- list()
 t30_list <- list()
@@ -43,7 +42,6 @@ s75_list <- list()
 s90_list <- list()
 s105_list <- list()
 s120_list <- list()
-
 
 for (x in date_list) {
   close <- es1_eod$CLOSE[es1_eod$ymd == x & es1_eod$hms == "16:00:00"]
@@ -101,14 +99,14 @@ for (x in date_list) {
   s120_list <- append(s120_list, s120_return)
 }
 
-print(length(pre_t15_list))
+#print(length(pre_t15_list))
 
 eod_returns <- data.frame(unlist(days_list), unlist(t15_list), unlist(t30_list), unlist(t45_list), unlist(t60_list), unlist(t75_list), unlist(t90_list), unlist(t105_list), unlist(t120_list), unlist(pre_t15_list), unlist(pre_t30_list), unlist(s15_list), unlist(s30_list), unlist(s45_list), unlist(s60_list), unlist(s75_list), unlist(s90_list), unlist(s105_list), unlist(s120_list))
 names(eod_returns) <- c("Date", "t15_return", "t30_return", "t45_return", "t60_return", "t75_return", "t90_return", "t105_return", "t120_return", "pre_t15_return", "pre_t30_return", "s15_return", "s30_return", "s45_return", "s60_return", "s75_return", "s90_return", "s105_return", "s120_return")
 eod_returns$Day_of_Week <- with(eod_returns, wday(eod_returns$Date, label=TRUE))
 eod_returns
 ```
-```{r}
+```{r, include=FALSE}
 library(lubridate)
 eod_returns_pos <- eod_returns[c("Date","t15_return", "pre_t15_return")]
 colnames(eod_returns_pos)[which(names(eod_returns_pos) == "Date")] <- "DATE"
@@ -119,7 +117,7 @@ eod_returns_pos$pre_t15_return <- format(round(eod_returns_pos$pre_t15_return,4)
 eod_returns_pos
 ```
 
-```{r}
+```{r, include=FALSE}
 library(lubridate)
 eod_returns1 <- eod_returns
 #eod_returns1[['Date']] <- as.POSIXct(eod_returns1[,c('Date')], format = "%Y-%m-%d")
@@ -128,7 +126,7 @@ colnames(eod_returns1)[which(names(eod_returns1) == "Date")] <- "DATE"
 eod_returns1
 ```
 
-```{r}
+```{r, include=FALSE}
 library(plyr)
 es1_volume <- read_excel("Bloomberg Data PK.xlsx",sheet = "ES1 VOLUME")
 vix <- read_excel("Bloomberg Data PK.xlsx",sheet = "VIX")
@@ -138,13 +136,13 @@ fedfunds <- read_excel("Bloomberg Data PK.xlsx",sheet = "FED FUNDS EFF")
 combined <- join_all(list(es1_volume, vix, spratio, fedfunds), by='DATE', type='inner')
 combined
 ```
-```{r}
+```{r, include=FALSE}
 netpos <- read_excel("Bloomberg Data PK.xlsx",sheet = "ES1 NET POSITION")
 
 combined1 = transform(combined, ES1_NET_POSITION = netpos[max.col(-abs(outer(DATE, netpos$DATE, `-`))), "ES1_NET_POSITION"])
 combined1
 ```
-```{r}
+```{r, include=FALSE}
 aaii <- read_excel("Bloomberg Data PK.xlsx",sheet = "AAII")
 
 combined2 = transform(combined1, BEAR = aaii[max.col(-abs(outer(DATE, aaii$DATE, `-`))), "BEAR"])
@@ -154,7 +152,7 @@ combined2$NETBULL = combined2$BULL - combined2$BEAR
 
 combined2
 ```
-```{r}
+```{r, include=FALSE}
 ism <- read_excel("Bloomberg Data PK.xlsx",sheet = "ISM")
 
 combined3 = transform(combined2, ISM_MAN = ism[max.col(-abs(outer(DATE, ism$DATE, `-`))), "ISM_MAN"])
@@ -164,14 +162,16 @@ combined3$DATE <- format(combined2$DATE, "%Y-%m-%d")
 
 combined3
 ```
-```{r}
+```{r, include=FALSE}
 full_table <- merge(eod_returns1, combined3, by = "DATE")
 #drop_cols <- c("Date")
 #full_table <- full_table[,!(names(full_table) %in% drop_cols)]
 full_table
 ```
 
-```{r, eval=FALSE}
+## By Day of Week
+
+```{r, include=FALSE}
 #Pivot Longer for Data (Not necessarily needed)
 library(magrittr)
 library(tidyr)
@@ -182,148 +182,180 @@ eod_returns2$Day_of_Week <- with(eod_returns2, wday(eod_returns2$DATE, label=TRU
 eod_returns2 <- eod_returns2[, c(1,4,2,3)]
 eod_returns2
 ```
+First set of plots we did was to show how each day's closing returns differ by Day of the Week.  We thought that perhaps Friday would have a different pattern if investors and traders were to close out their positions on a weekly basis.
+
+The first plot showed the final 15 minutes of return grouped by Day of the Week. Besides some larger variability on Thursdays there isn't a clear distinction from this chart.  most days have similar averages and ranges.
 ```{r}
 library(ggplot2)
 eod_returns15 <- subset(eod_returns2, Return_Type == "t15_return" )
-p <- ggplot(eod_returns15, aes(x=Day_of_Week, y=Return)) + geom_boxplot()
+p <- ggplot(eod_returns15, aes(x=Day_of_Week, y=Return)) + geom_boxplot() +
+  labs(title="Daily last 15 minutes return, by Day of the Week",
+         x= "Day of Week")
 p
 ```
+
+We thought that perhaps if we defined "closing" time as the final 30 minutes instead of 15 minutes we might have a different finding. This turns out to give us that Wedsnesdays during this past year have generally experienced lower average closing 30 minutes returns.
+
 ```{r}
 #THIS ONE SHOWS THAT THERE SEEMS TO BE LOWER END OF DAY RETURNS ON WEDNESDAYS!
 library(ggplot2)
 eod_returns30 <- subset(eod_returns2, Return_Type == "t30_return" )
-p <- ggplot(eod_returns30, aes(x=Day_of_Week, y=Return)) + geom_boxplot()
+p <- ggplot(eod_returns30, aes(x=Day_of_Week, y=Return)) + geom_boxplot() +
+  labs(title="Daily last 30 minutes return, by Day of the Week",
+         x= "Day of Week")
 p
 ```
-```{r}
+```{r, include=FALSE}
 library(ggplot2)
 eod_returns45 <- subset(eod_returns2, Return_Type == "t45_return" )
 p <- ggplot(eod_returns45, aes(x=Day_of_Week, y=Return)) + geom_boxplot()
 p
 ```
+If we stretched this out as long as final 60 minutes, the Wednesday pattern goes away, but there appears to be larger positive outliers.  
 ```{r}
 library(ggplot2)
 eod_returns60 <- subset(eod_returns2, Return_Type == "t60_return" )
-p <- ggplot(eod_returns60, aes(x=Day_of_Week, y=Return)) + geom_boxplot()
+p <- ggplot(eod_returns60, aes(x=Day_of_Week, y=Return)) + geom_boxplot() +
+  labs(title="Daily last 60 minutes return, by Day of the Week",
+         x= "Day of Week")
 p
 ```
 
-```{r}
+```{r, include=FALSE}
 library(ggplot2)
 p <- ggplot(eod_returns, aes(x=s15_return, y=t105_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0)
 p
 ```
-```{r}
+```{r, include=FALSE}
 library(ggplot2)
 p <- ggplot(eod_returns, aes(x=s30_return, y=t90_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0)
 p
 ```
-
-
-```{r}
+```{r, include=FALSE}
 library(ggplot2)
 p <- ggplot(eod_returns, aes(x=s45_return, y=t75_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0)
 p
 ```
-```{r}
+```{r, include=FALSE}
 library(ggplot2)
 p <- ggplot(eod_returns, aes(x=s60_return, y=t60_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0)
 p
 ```
-
-```{r}
+```{r, include=FALSE}
 library(ggplot2)
 p <- ggplot(eod_returns, aes(x=s75_return, y=t45_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0)
 p
 ```
-
-```{r}
+```{r, include=FALSE}
 library(ggplot2)
 p <- ggplot(eod_returns, aes(x=s90_return, y=t30_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0)
 p
 ```
-
-```{r}
+```{r, include=FALSE}
 library(ggplot2)
 p <- ggplot(eod_returns, aes(x=s105_return, y=t15_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0)
 p
 ```
+
+## By Same Day Returns
+
+We thought that perhaps the day's return would be a reason the closing return would be higher or lower. As it turns out if the returns earlier in the day is higher than 0.02, the closing return is usually lower.  The vice versa is true for lower earlier returns to result in higher closing return.  This is indicative of intraday mean reversion in return patterns.
+
 ```{r}
 #THIS ONE SHOWS MEAN REVERSION OF LAST 15 MINUTES OF TRADING VS THE RETURNS UP UNTIL THAT POINT
 library(ggplot2)
-p <- ggplot(eod_returns, aes(x=pre_t15_return, y=t15_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0)
+p <- ggplot(eod_returns, aes(x=pre_t15_return, y=t15_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0) +
+  labs(title="Daily last 15 minutes return, by Same Day returns (excluding last 15 minutes)",
+         x= "Same Day Returns", y="Closing 15 minutes Returns")
 p
 ```
 
-```{r}
+```{r, include=FALSE}
 library(ggplot2)
 p <- ggplot(eod_returns, aes(x=pre_t30_return, y=t30_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0)
 p
 ```
 
+## By Other Variables
+
+Often we can see market return be affected by the market conditions.  The following  charts will examine how the current market regimes might produce higher or lower closing returns.
+
+### VIX
+
+VIX is known as the fear index, and is a common indicator for the level of volatility and anxiety in the market.  The following chart shows that the higher the index, the more variation we're seeing in closing returns.  This is not surprising in that higher return volatility should produce a wider range of closing returns.  This is likely showing more correlation than causation.
+
 ```{r}
 #THIS ONE SHOWS HIGHER VIX CORRELATING WITH HIGHER VOLATILITY OF RETURNS
 library(ggplot2)
-p <- ggplot(full_table, aes(x=VIX, y=t15_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0) + coord_cartesian(xlim = c(10, 40))
+p <- ggplot(full_table, aes(x=VIX, y=t15_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0) + coord_cartesian(xlim = c(10, 40)) +
+  labs(title="Daily last 15 minutes return at levels of VIX",
+         x= "VIX Volatility Index", y = "Closing Returns")
 p
 ```
 
-```{r}
+```{r, include=FALSE}
 library(ggplot2)
 p <- ggplot(full_table, aes(x=ES1_NET_POSITION, y=t15_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0)
 p
 ```
-
-
-```{r}
+```{r, include=FALSE}
 library(ggplot2)
 p <- ggplot(full_table, aes(x=ES1_VOLUME, y=t15_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0)
 p
 ```
-
-```{r}
+```{r, include=FALSE}
 library(ggplot2)
 p <- ggplot(full_table, aes(x=BEAR, y=t15_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0) + coord_cartesian(xlim = c(20, 70))
 p
 ```
-
-
-
-```{r}
+```{r, include=FALSE}
 library(ggplot2)
 p <- ggplot(full_table, aes(x=BULL, y=t15_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0) + coord_cartesian(xlim = c(10, 50))
 p
 ```
+
+### Net Bull Index
+
+AAII's Net Bull Sentiment is a net indicator of the AAII Bull Sentiment - AAII Bear Sentiment.  It shows how "net" bullish investors are about the market  We see below that when investors are net-bearish (negative values) the range of returns widen considerably.
+
 ```{r}
 #THIS ONE SHOWS HIGHER NET BEARISH SENTIMENT CORRELATING WITH HIGHER VOLATILITY OF RETURNS
 library(ggplot2)
 p <- ggplot(full_table, aes(x=NETBULL, y=t15_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0)
 p
 ```
+
+### Market P/E Ratio
+
+P/E Ratio stands for Price to Earnings Ratio.  The Market's P/E Ratio is a pricing indicator to measure the valuation of the average market.  When it's lower, the market is pricing the earnings of the average company to be lower.  The ratio is typically lower than the overall returns are lower to negative, and also consistent with that the lower the P/E Ratio is the wider closing returns appears to be.
+
 ```{r}
 #THIS ONE SHOWS LOWER PE RATIOS CORRELATING WITH HIGHER VOLATILITY OF RETURNS
 library(ggplot2)
 p <- ggplot(full_table, aes(x=PE_RATIO, y=t15_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0) + coord_cartesian(xlim = c(15, 30))
 p
 ```
-```{r}
+
+```{r, include=FALSE}
 library(ggplot2)
 p <- ggplot(full_table, aes(x=FED_FUNDS, y=t15_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0)
 p
 ```
-```{r}
+```{r, include=FALSE}
 library(ggplot2)
 p <- ggplot(full_table, aes(x=ISM_MAN, y=t15_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0) + coord_cartesian(xlim = c(40, 70))
 p
 ```
-```{r}
+```{r, include=FALSE}
 library(ggplot2)
 p <- ggplot(full_table, aes(x=ISM_SER, y=t15_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0) + coord_cartesian(xlim = c(50, 70))
 p
 ```
-```{r}
+```{r, include=FALSE}
 numlist <- c(-11, -8, 3, 5, 6, 8, 9, 12, 13, 15, 28, 32, 35)
 quantile(numlist)
 ```
 
+### Other variables omitted
 
+We also looked into Fed Funds Rate and ISM Index, but neither showed much relationship with the closing returns.
