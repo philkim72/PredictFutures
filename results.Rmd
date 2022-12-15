@@ -1,1 +1,329 @@
 # Results
+
+```{r setup, include=FALSE}
+# this prevents package loading message from appearing in the rendered version of your problem set
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE)
+```
+
+### 1. Load the Data
+
+
+```{r}
+library("lubridate")
+library("readxl")
+es1_df <- read_excel("Bloomberg Data PK.xlsx",sheet = "ES1 COMPLETE")
+es1_df$hms <- format(es1_df$DATE, "%H:%M:%S")
+es1_df$ymd <- format(es1_df$DATE, "%Y-%m-%d")
+es1_eod <- subset(es1_df, (hms >= "14:00:00" & hms <= "16:00:00") )
+date_list <- unique(es1_eod$ymd)
+es1_eod <- subset(es1_df, (hms >= "14:00:00" & hms <= "16:00:00") | hms == "09:30:00")
+es1_eod
+es1_eod$CLOSE[es1_eod$ymd == "2022-10-28" & es1_eod$hms == "16:00:00"]
+```
+```{r}
+days_list <- list()
+t15_list <- list()
+t30_list <- list()
+t45_list <- list()
+t60_list <- list()
+t75_list <- list()
+t90_list <- list()
+t105_list <- list()
+t120_list <- list()
+
+pre_t15_list <- list()
+pre_t30_list <- list()
+
+s15_list <- list()
+s30_list <- list()
+s45_list <- list()
+s60_list <- list()
+s75_list <- list()
+s90_list <- list()
+s105_list <- list()
+s120_list <- list()
+
+
+for (x in date_list) {
+  close <- es1_eod$CLOSE[es1_eod$ymd == x & es1_eod$hms == "16:00:00"]
+  t15 <- es1_eod$CLOSE[es1_eod$ymd == x & es1_eod$hms == "15:45:00"]
+  t30 <- es1_eod$CLOSE[es1_eod$ymd == x & es1_eod$hms == "15:30:00"]
+  t45 <- es1_eod$CLOSE[es1_eod$ymd == x & es1_eod$hms == "15:15:00"]
+  t60 <- es1_eod$CLOSE[es1_eod$ymd == x & es1_eod$hms == "15:00:00"]
+  t75 <- es1_eod$CLOSE[es1_eod$ymd == x & es1_eod$hms == "14:45:00"]
+  t90 <- es1_eod$CLOSE[es1_eod$ymd == x & es1_eod$hms == "14:30:00"]
+  t105 <- es1_eod$CLOSE[es1_eod$ymd == x & es1_eod$hms == "14:15:00"]
+  t120 <- es1_eod$CLOSE[es1_eod$ymd == x & es1_eod$hms == "14:00:00"]
+  open <- es1_eod$CLOSE[es1_eod$ymd == x & es1_eod$hms == "09:30:00"]
+  
+  t15_return <- (close / t15) - 1
+  t30_return <- (close / t30) - 1
+  t45_return <- (close / t45) - 1
+  t60_return <- (close / t60) - 1
+  t75_return <- (close / t75) - 1
+  t90_return <- (close / t90) - 1
+  t105_return <- (close / t105) - 1
+  t120_return <- (close / t120) - 1
+  
+  pre_t15_return <- (t15 / open) - 1
+  pre_t30_return <- (t30 / open) - 1
+  
+  s15_return <- (t105 / t120) - 1
+  s30_return <- (t90 / t120) - 1
+  s45_return <- (t75 / t120) - 1
+  s60_return <- (t60 / t120) - 1
+  s75_return <- (t45 / t120) - 1
+  s90_return <- (t30 / t120) - 1
+  s105_return <- (t15 / t120) - 1
+  s120_return <- (close / t120) - 1
+  
+  days_list <- append(days_list, x)
+  t15_list <- append(t15_list, t15_return)
+  t30_list <- append(t30_list, t30_return)
+  t45_list <- append(t45_list, t45_return)
+  t60_list <- append(t60_list, t60_return)
+  t75_list <- append(t75_list, t75_return)
+  t90_list <- append(t90_list, t90_return)
+  t105_list <- append(t105_list, t105_return)
+  t120_list <- append(t120_list, t120_return)
+  
+  pre_t15_list <- append(pre_t15_list, pre_t15_return)
+  pre_t30_list <- append(pre_t30_list, pre_t30_return)
+  
+  s15_list <- append(s15_list, s15_return)
+  s30_list <- append(s30_list, s30_return)
+  s45_list <- append(s45_list, s45_return)
+  s60_list <- append(s60_list, s60_return)
+  s75_list <- append(s75_list, s75_return)
+  s90_list <- append(s90_list, s90_return)
+  s105_list <- append(s105_list, s105_return)
+  s120_list <- append(s120_list, s120_return)
+}
+
+print(length(pre_t15_list))
+
+eod_returns <- data.frame(unlist(days_list), unlist(t15_list), unlist(t30_list), unlist(t45_list), unlist(t60_list), unlist(t75_list), unlist(t90_list), unlist(t105_list), unlist(t120_list), unlist(pre_t15_list), unlist(pre_t30_list), unlist(s15_list), unlist(s30_list), unlist(s45_list), unlist(s60_list), unlist(s75_list), unlist(s90_list), unlist(s105_list), unlist(s120_list))
+names(eod_returns) <- c("Date", "t15_return", "t30_return", "t45_return", "t60_return", "t75_return", "t90_return", "t105_return", "t120_return", "pre_t15_return", "pre_t30_return", "s15_return", "s30_return", "s45_return", "s60_return", "s75_return", "s90_return", "s105_return", "s120_return")
+eod_returns$Day_of_Week <- with(eod_returns, wday(eod_returns$Date, label=TRUE))
+eod_returns
+```
+```{r}
+library(lubridate)
+eod_returns_pos <- eod_returns[c("Date","t15_return", "pre_t15_return")]
+colnames(eod_returns_pos)[which(names(eod_returns_pos) == "Date")] <- "DATE"
+eod_returns_pos <- subset(eod_returns_pos, pre_t15_return > 0.02 )
+eod_returns_pos$t15_return <- format(round(eod_returns_pos$t15_return,4),nsmall=4)
+eod_returns_pos$pre_t15_return <- format(round(eod_returns_pos$pre_t15_return,4),nsmall=4)
+
+eod_returns_pos
+```
+
+```{r}
+library(lubridate)
+eod_returns1 <- eod_returns
+#eod_returns1[['Date']] <- as.POSIXct(eod_returns1[,c('Date')], format = "%Y-%m-%d")
+colnames(eod_returns1)[which(names(eod_returns1) == "Date")] <- "DATE"
+
+eod_returns1
+```
+
+```{r}
+library(plyr)
+es1_volume <- read_excel("Bloomberg Data PK.xlsx",sheet = "ES1 VOLUME")
+vix <- read_excel("Bloomberg Data PK.xlsx",sheet = "VIX")
+spratio <- read_excel("Bloomberg Data PK.xlsx",sheet = "S&P PE RATIO")
+fedfunds <- read_excel("Bloomberg Data PK.xlsx",sheet = "FED FUNDS EFF")
+
+combined <- join_all(list(es1_volume, vix, spratio, fedfunds), by='DATE', type='inner')
+combined
+```
+```{r}
+netpos <- read_excel("Bloomberg Data PK.xlsx",sheet = "ES1 NET POSITION")
+
+combined1 = transform(combined, ES1_NET_POSITION = netpos[max.col(-abs(outer(DATE, netpos$DATE, `-`))), "ES1_NET_POSITION"])
+combined1
+```
+```{r}
+aaii <- read_excel("Bloomberg Data PK.xlsx",sheet = "AAII")
+
+combined2 = transform(combined1, BEAR = aaii[max.col(-abs(outer(DATE, aaii$DATE, `-`))), "BEAR"])
+combined2 = transform(combined2, NEUTRAL = aaii[max.col(-abs(outer(DATE, aaii$DATE, `-`))), "NEUTRAL"])
+combined2 = transform(combined2, BULL = aaii[max.col(-abs(outer(DATE, aaii$DATE, `-`))), "BULL"])
+combined2$NETBULL = combined2$BULL - combined2$BEAR 
+
+combined2
+```
+```{r}
+ism <- read_excel("Bloomberg Data PK.xlsx",sheet = "ISM")
+
+combined3 = transform(combined2, ISM_MAN = ism[max.col(-abs(outer(DATE, ism$DATE, `-`))), "ISM_MAN"])
+combined3 = transform(combined3, ISM_SER = ism[max.col(-abs(outer(DATE, ism$DATE, `-`))), "ISM_SER"])
+
+combined3$DATE <- format(combined2$DATE, "%Y-%m-%d")
+
+combined3
+```
+```{r}
+full_table <- merge(eod_returns1, combined3, by = "DATE")
+#drop_cols <- c("Date")
+#full_table <- full_table[,!(names(full_table) %in% drop_cols)]
+full_table
+```
+
+```{r, eval=FALSE}
+#Pivot Longer for Data (Not necessarily needed)
+library(magrittr)
+library(tidyr)
+eod_returns2 = eod_returns1 %>%
+  pivot_longer(!c("DATE", "Day_of_Week"), names_to = "Return_Type", values_to = "Return")
+
+eod_returns2$Day_of_Week <- with(eod_returns2, wday(eod_returns2$DATE, label=TRUE))
+eod_returns2 <- eod_returns2[, c(1,4,2,3)]
+eod_returns2
+```
+```{r}
+library(ggplot2)
+eod_returns15 <- subset(eod_returns2, Return_Type == "t15_return" )
+p <- ggplot(eod_returns15, aes(x=Day_of_Week, y=Return)) + geom_boxplot()
+p
+```
+```{r}
+#THIS ONE SHOWS THAT THERE SEEMS TO BE LOWER END OF DAY RETURNS ON WEDNESDAYS!
+library(ggplot2)
+eod_returns30 <- subset(eod_returns2, Return_Type == "t30_return" )
+p <- ggplot(eod_returns30, aes(x=Day_of_Week, y=Return)) + geom_boxplot()
+p
+```
+```{r}
+library(ggplot2)
+eod_returns45 <- subset(eod_returns2, Return_Type == "t45_return" )
+p <- ggplot(eod_returns45, aes(x=Day_of_Week, y=Return)) + geom_boxplot()
+p
+```
+```{r}
+library(ggplot2)
+eod_returns60 <- subset(eod_returns2, Return_Type == "t60_return" )
+p <- ggplot(eod_returns60, aes(x=Day_of_Week, y=Return)) + geom_boxplot()
+p
+```
+
+```{r}
+library(ggplot2)
+p <- ggplot(eod_returns, aes(x=s15_return, y=t105_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0)
+p
+```
+```{r}
+library(ggplot2)
+p <- ggplot(eod_returns, aes(x=s30_return, y=t90_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0)
+p
+```
+
+
+```{r}
+library(ggplot2)
+p <- ggplot(eod_returns, aes(x=s45_return, y=t75_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0)
+p
+```
+```{r}
+library(ggplot2)
+p <- ggplot(eod_returns, aes(x=s60_return, y=t60_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0)
+p
+```
+
+```{r}
+library(ggplot2)
+p <- ggplot(eod_returns, aes(x=s75_return, y=t45_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0)
+p
+```
+
+```{r}
+library(ggplot2)
+p <- ggplot(eod_returns, aes(x=s90_return, y=t30_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0)
+p
+```
+
+```{r}
+library(ggplot2)
+p <- ggplot(eod_returns, aes(x=s105_return, y=t15_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0)
+p
+```
+```{r}
+#THIS ONE SHOWS MEAN REVERSION OF LAST 15 MINUTES OF TRADING VS THE RETURNS UP UNTIL THAT POINT
+library(ggplot2)
+p <- ggplot(eod_returns, aes(x=pre_t15_return, y=t15_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0)
+p
+```
+
+```{r}
+library(ggplot2)
+p <- ggplot(eod_returns, aes(x=pre_t30_return, y=t30_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0)
+p
+```
+
+```{r}
+#THIS ONE SHOWS HIGHER VIX CORRELATING WITH HIGHER VOLATILITY OF RETURNS
+library(ggplot2)
+p <- ggplot(full_table, aes(x=VIX, y=t15_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0) + coord_cartesian(xlim = c(10, 40))
+p
+```
+
+```{r}
+library(ggplot2)
+p <- ggplot(full_table, aes(x=ES1_NET_POSITION, y=t15_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0)
+p
+```
+
+
+```{r}
+library(ggplot2)
+p <- ggplot(full_table, aes(x=ES1_VOLUME, y=t15_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0)
+p
+```
+
+```{r}
+library(ggplot2)
+p <- ggplot(full_table, aes(x=BEAR, y=t15_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0) + coord_cartesian(xlim = c(20, 70))
+p
+```
+
+
+
+```{r}
+library(ggplot2)
+p <- ggplot(full_table, aes(x=BULL, y=t15_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0) + coord_cartesian(xlim = c(10, 50))
+p
+```
+```{r}
+#THIS ONE SHOWS HIGHER NET BEARISH SENTIMENT CORRELATING WITH HIGHER VOLATILITY OF RETURNS
+library(ggplot2)
+p <- ggplot(full_table, aes(x=NETBULL, y=t15_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0)
+p
+```
+```{r}
+#THIS ONE SHOWS LOWER PE RATIOS CORRELATING WITH HIGHER VOLATILITY OF RETURNS
+library(ggplot2)
+p <- ggplot(full_table, aes(x=PE_RATIO, y=t15_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0) + coord_cartesian(xlim = c(15, 30))
+p
+```
+```{r}
+library(ggplot2)
+p <- ggplot(full_table, aes(x=FED_FUNDS, y=t15_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0)
+p
+```
+```{r}
+library(ggplot2)
+p <- ggplot(full_table, aes(x=ISM_MAN, y=t15_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0) + coord_cartesian(xlim = c(40, 70))
+p
+```
+```{r}
+library(ggplot2)
+p <- ggplot(full_table, aes(x=ISM_SER, y=t15_return)) + geom_point() + geom_hline(yintercept=0) + geom_vline(xintercept=0) + coord_cartesian(xlim = c(50, 70))
+p
+```
+```{r}
+numlist <- c(-11, -8, 3, 5, 6, 8, 9, 12, 13, 15, 28, 32, 35)
+quantile(numlist)
+```
+
+
