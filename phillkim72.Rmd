@@ -119,6 +119,17 @@ eod_returns
 ```
 ```{r}
 library(lubridate)
+eod_returns_pos <- eod_returns[c("Date","t15_return", "pre_t15_return")]
+colnames(eod_returns_pos)[which(names(eod_returns_pos) == "Date")] <- "DATE"
+eod_returns_pos <- subset(eod_returns_pos, pre_t15_return > 0.02 )
+eod_returns_pos$t15_return <- format(round(eod_returns_pos$t15_return,4),nsmall=4)
+eod_returns_pos$pre_t15_return <- format(round(eod_returns_pos$pre_t15_return,4),nsmall=4)
+
+eod_returns_pos
+```
+
+```{r}
+library(lubridate)
 eod_returns1 <- eod_returns
 #eod_returns1[['Date']] <- as.POSIXct(eod_returns1[,c('Date')], format = "%Y-%m-%d")
 colnames(eod_returns1)[which(names(eod_returns1) == "Date")] <- "DATE"

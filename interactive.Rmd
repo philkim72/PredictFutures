@@ -1,29 +1,102 @@
 # Interactive component
 
-<script src=""https://d3js.org/d3.v7.js""></script>
+```{r, include=FALSE}
+library("lubridate")
+library("readxl")
+es1_df <- read_excel("Bloomberg Data PK.xlsx",sheet = "ES1 COMPLETE")
+es1_df$hms <- format(es1_df$DATE, "%H:%M:%S")
+es1_df$ymd <- format(es1_df$DATE, "%Y-%m-%d")
+es1_eod <- subset(es1_df, (hms >= "14:00:00" & hms <= "16:00:00") )
+date_list <- unique(es1_eod$ymd)
+es1_eod <- subset(es1_df, (hms >= "14:00:00" & hms <= "16:00:00") | hms == "09:30:00")
+es1_eod
+es1_eod$CLOSE[es1_eod$ymd == "2022-10-28" & es1_eod$hms == "16:00:00"]
+
+days_list <- list()
+pre_t15_list <- list()
+t15_list <- list()
+
+for (x in date_list) {
+  close <- es1_eod$CLOSE[es1_eod$ymd == x & es1_eod$hms == "16:00:00"]
+  t15 <- es1_eod$CLOSE[es1_eod$ymd == x & es1_eod$hms == "15:45:00"]
+  open <- es1_eod$CLOSE[es1_eod$ymd == x & es1_eod$hms == "09:30:00"]
+  
+  pre_t15_return <- (t15 / open) - 1
+  t15_return <- (close / t15) - 1
+
+  days_list <- append(days_list, x)
+  pre_t15_list <- append(pre_t15_list, pre_t15_return)
+  t15_list <- append(t15_list, t15_return)
+}
+
+print(length(pre_t15_list))
+
+eod_returns <- data.frame(unlist(days_list), unlist(pre_t15_list), unlist(t15_list))
+names(eod_returns) <- c("Date", "pre_t15_return", "t15_return")
+eod_returns
+```
+```{r}
+library(lubridate)
+eod_returns_pos <- eod_returns[c("Date", "pre_t15_return","t15_return")]
+colnames(eod_returns_pos)[which(names(eod_returns_pos) == "Date")] <- "DATE"
+eod_returns_pos <- subset(eod_returns_pos, pre_t15_return > 0.02 )
+eod_returns_pos$t15_return <- format(round(eod_returns_pos$t15_return,4),nsmall=4)
+eod_returns_pos$pre_t15_return <- format(round(eod_returns_pos$pre_t15_return,4),nsmall=4)
+eod_returns_pos <- eod_returns_pos[order(eod_returns_pos$t15_return),]
+
+eod_returns_neg <- eod_returns[c("Date", "pre_t15_return", "t15_return")]
+colnames(eod_returns_neg)[which(names(eod_returns_neg) == "Date")] <- "DATE"
+eod_returns_neg <- subset(eod_returns_neg, pre_t15_return < -0.02 )
+eod_returns_neg$t15_return <- format(round(eod_returns_neg$t15_return,4),nsmall=4)
+eod_returns_neg$pre_t15_return <- format(round(eod_returns_neg$pre_t15_return,4),nsmall=4)
+eod_returns_neg <- eod_returns_neg[order(eod_returns_neg$t15_return),]
+
+eod_returns_pos
+eod_returns_neg
+```
+
+```{r, include=FALSE}
+library("lubridate")
+library("readxl")
+es1_df <- read_excel("Bloomberg Data PK.xlsx",sheet = "ES1 COMPLETE")
+es1_df$hms <- format(es1_df$DATE, "%H:%M:%S")
+es1_df$ymd <- format(es1_df$DATE, "%Y-%m-%d")
+es1_df <- es1_df[c("ymd", "hms", "CLOSE")]
+es1_pos <- subset(es1_df, ymd == "2022-02-24")
+es1_pos <- subset(es1_pos, hms >= "09:30:00" & hms < "16:00:00")
+es1_pos <- es1_pos[order(es1_pos$hms),]
+colnames(es1_pos)[which(names(es1_pos) == "CLOSE")] <- "POS_CLOSE"
+#es1_pos$time_step <- 1:nrow(es1_pos)
+es1_pos <- es1_pos[c("hms", "POS_CLOSE")]
+es1_pos
+```
+```{r, include=FALSE}
+library("lubridate")
+library("readxl")
+es1_df <- read_excel("Bloomberg Data PK.xlsx",sheet = "ES1 COMPLETE")
+es1_df$hms <- format(es1_df$DATE, "%H:%M:%S")
+es1_df$ymd <- format(es1_df$DATE, "%Y-%m-%d")
+es1_df <- es1_df[c("ymd", "hms", "CLOSE")]
+es1_neg <- subset(es1_df, ymd == "2022-04-29")
+es1_neg <- subset(es1_neg, hms >= "09:30:00" & hms < "16:00:00")
+es1_neg <- es1_neg[order(es1_neg$hms),]
+colnames(es1_neg)[which(names(es1_neg) == "CLOSE")] <- "NEG_CLOSE"
+#es1_neg$time_step <- 1:nrow(es1_neg)
+es1_neg <- es1_neg[c("hms", "NEG_CLOSE")]
+es1_neg
+```
+```{r, include=FALSE}
+price_df <- merge(es1_pos, es1_neg, by = "hms")
+price_df$time <- 1:nrow(price_df) -1
+price_df <- price_df[c("time", "POS_CLOSE", "NEG_CLOSE")]
+write.csv(price_df, "price.csv", row.names=FALSE)
+price_df
+```
+
+<script src="https://d3js.org/d3.v6.js""></script>
+
+<select id="selectButton"></select>
 
 <div id="plot"></div>
 
-<script>
-// Create SVG element
-  var svg = d3.select("div#plot")
-      .append("svg")
-      .attr("width", "600")
-      .attr("height", "400")
-      
-// Add elements
-
-  svg.append("rect")
-    .attr("x", "0")
-    .attr("y", "0")
-    .attr("width", "400")
-    .attr("height", "400")
-    .attr("fill", "cornflowerblue")
-
-  svg.append("circle")
-    .attr("cx", "100")
-    .attr("cy", "100")
-    .attr("r", "5")
-    .attr("fill", "crimson")
-    
-</script>
+<script src="scripts/d3v3.js"></script>
