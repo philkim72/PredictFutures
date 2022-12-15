@@ -58,4 +58,4 @@ Since most of the independent variables are weekly or monthly, we have to backfi
 
 ## Missing value analysis
 
-The data sets that we've chosen are all highly structured pricing, transaction, or survey data that have no missing data.  However, there are mismatches in the data frequency between weekly or monthly to the daily return series that we are ultimately exploring.
+The data sets that we've chosen are all highly structured pricing, transaction, or survey data that have no missing data.  However, there are mismatches in the data frequency between weekly or monthly to the daily return series that we are ultimately exploring. 
