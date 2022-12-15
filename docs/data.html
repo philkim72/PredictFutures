@@ -23,7 +23,7 @@
 <meta name="author" content="Phillip Kim (ppk2003) &amp; Jon Tse (jlt93)" />
 
 
-<meta name="date" content="2022-12-13" />
+<meta name="date" content="2022-12-15" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -80,8 +80,21 @@
 </ul></li>
 <li class="chapter" data-level="3" data-path="data.html"><a href="data.html"><i class="fa fa-check"></i><b>3</b> Data</a>
 <ul>
-<li class="chapter" data-level="3.1" data-path="data.html"><a href="data.html#sources"><i class="fa fa-check"></i><b>3.1</b> Sources</a></li>
-<li class="chapter" data-level="3.2" data-path="data.html"><a href="data.html#cleaning-transformation"><i class="fa fa-check"></i><b>3.2</b> Cleaning / transformation</a></li>
+<li class="chapter" data-level="3.1" data-path="data.html"><a href="data.html#sources"><i class="fa fa-check"></i><b>3.1</b> Sources</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="data.html"><a href="data.html#e-mini-futures"><i class="fa fa-check"></i><b>3.1.1</b> E-mini futures</a></li>
+<li class="chapter" data-level="3.1.2" data-path="data.html"><a href="data.html#net-positioning"><i class="fa fa-check"></i><b>3.1.2</b> Net Positioning</a></li>
+<li class="chapter" data-level="3.1.3" data-path="data.html"><a href="data.html#market-valuation"><i class="fa fa-check"></i><b>3.1.3</b> Market Valuation</a></li>
+<li class="chapter" data-level="3.1.4" data-path="data.html"><a href="data.html#market-volatility"><i class="fa fa-check"></i><b>3.1.4</b> Market Volatility</a></li>
+<li class="chapter" data-level="3.1.5" data-path="data.html"><a href="data.html#investor-sentiment"><i class="fa fa-check"></i><b>3.1.5</b> Investor Sentiment</a></li>
+<li class="chapter" data-level="3.1.6" data-path="data.html"><a href="data.html#federal-funds-rate"><i class="fa fa-check"></i><b>3.1.6</b> Federal Funds Rate</a></li>
+<li class="chapter" data-level="3.1.7" data-path="data.html"><a href="data.html#ism-manufacturing-and-services-pmi-index"><i class="fa fa-check"></i><b>3.1.7</b> ISM Manufacturing and Services PMI Index</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="data.html"><a href="data.html#cleaning-transformation"><i class="fa fa-check"></i><b>3.2</b> Cleaning / transformation</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="data.html"><a href="data.html#creating-return-series"><i class="fa fa-check"></i><b>3.2.1</b> Creating return series</a></li>
+<li class="chapter" data-level="3.2.2" data-path="data.html"><a href="data.html#combining-independent-variables-with-pricing-series"><i class="fa fa-check"></i><b>3.2.2</b> Combining independent variables with pricing series</a></li>
+</ul></li>
 <li class="chapter" data-level="3.3" data-path="data.html"><a href="data.html#missing-value-analysis"><i class="fa fa-check"></i><b>3.3</b> Missing value analysis</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="results.html"><a href="results.html"><i class="fa fa-check"></i><b>4</b> Results</a></li>
@@ -110,12 +123,67 @@
 <h1><span class="header-section-number">Chapter 3</span> Data<a href="data.html#data" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <div id="sources" class="section level2 hasAnchor" number="3.1">
 <h2><span class="header-section-number">3.1</span> Sources<a href="data.html#sources" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The data we need for our study is available in Bloomberg Terminal Application, accessible in Columbia University’s Library Bloomberg Terminal. Phillip Kim spent a morning at the library, and used the export Data function for each of the data items listed below and their respective Bloomberg functions. The exported data is then saved into individual worksheets within an Excel workbook named “bloomberg Data PK.xlsx”</p>
+<p>The primary hurdle that we faced in data collection was realizing that the intraday pricing history for the SP500 futures was only trailing one year from the download date. That will limit our dependent variable of each day’s closing returns to only one year of data.</p>
+<div id="e-mini-futures" class="section level3 hasAnchor" number="3.1.1">
+<h3><span class="header-section-number">3.1.1</span> E-mini futures<a href="data.html#e-mini-futures" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Bloomberg identifier: ES1 Index
+Fields: Price (LAST_PRICE) and Volume (VOLUME)
+Details: Choose 15 minute pricing interval going as far back as possible. This returns us data from 10/17/2021 18:00 to 11/1/2022 10:15am, a total of 23585 rows.</p>
+</div>
+<div id="net-positioning" class="section level3 hasAnchor" number="3.1.2">
+<h3><span class="header-section-number">3.1.2</span> Net Positioning<a href="data.html#net-positioning" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Bloomberg identifier: IMMOENCN Index
+Fields: LAST_PRICE
+Details: This net positioning data is a weekly series of non-commercial net-positioning against our SP500 futures. We downloaded 669 rows of data since 1/31/2010, but since our data starts 10/17/2021 we’ll only use about 53 weeks of data.</p>
+</div>
+<div id="market-valuation" class="section level3 hasAnchor" number="3.1.3">
+<h3><span class="header-section-number">3.1.3</span> Market Valuation<a href="data.html#market-valuation" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Bloomberg Identifier: SPX Index
+Fields: PE_RATIO
+Details: P/E ratio data is daily, and we downloaded data all the way back to 2010 (3230 rows). Since our pricing data starts 10/17/2021, we’ll only use 259 rows of data.</p>
+</div>
+<div id="market-volatility" class="section level3 hasAnchor" number="3.1.4">
+<h3><span class="header-section-number">3.1.4</span> Market Volatility<a href="data.html#market-volatility" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Bloomberg Identifier: VIX Index
+Fields: LAST_PRICE
+Details: The VIX index is a daily series, and we downloaded data all the way back to 2010 (3234 rows). Since our pricing data starts 10/17/2021, we’ll only use 263 rows of data.</p>
+</div>
+<div id="investor-sentiment" class="section level3 hasAnchor" number="3.1.5">
+<h3><span class="header-section-number">3.1.5</span> Investor Sentiment<a href="data.html#investor-sentiment" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Bloomberg Identifier: AAIIBEAR Index and AAIIBULL Index
+Fields: LAST_PRICE
+Details: AAII’s sentiment index is a weekly survey, and while we plan to use a “Net Bull” sentiment (Bull Sentiment - Bear Sentiment) we must download them individually. We downloaded 668 rows of weekly data since 2010, and will use 54 rows to cover the 1 year of return pricing data.</p>
+</div>
+<div id="federal-funds-rate" class="section level3 hasAnchor" number="3.1.6">
+<h3><span class="header-section-number">3.1.6</span> Federal Funds Rate<a href="data.html#federal-funds-rate" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Bloomberg Identifier: FDFD Index
+Fields: LAST_PRICE
+Details: The Fed Funds Effective Rate is a daily series, and we downloaded data all the way back to 2010 (3227 rows). Since our pricing data starts 10/17/2021, we’ll only use 259 rows of data.</p>
+</div>
+<div id="ism-manufacturing-and-services-pmi-index" class="section level3 hasAnchor" number="3.1.7">
+<h3><span class="header-section-number">3.1.7</span> ISM Manufacturing and Services PMI Index<a href="data.html#ism-manufacturing-and-services-pmi-index" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Bloomberg Identifier: NAPMPMI Index and NAPMNMI Index
+Fields: LAST_PRICE
+Details: The ISM surveys is a monthly series, and we downloaded data all the way back to 2010 (154 rows). Since our pricing data starts 10/17/2021, we’ll only use 13 rows of data.</p>
+</div>
 </div>
 <div id="cleaning-transformation" class="section level2 hasAnchor" number="3.2">
 <h2><span class="header-section-number">3.2</span> Cleaning / transformation<a href="data.html#cleaning-transformation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Since all of the data collected comes from Bloomberg, the data is already structured and doesn’t require a lot of cleaning. After the export and download into a single excel workbook, we performed two phases of transformation:</p>
+<div id="creating-return-series" class="section level3 hasAnchor" number="3.2.1">
+<h3><span class="header-section-number">3.2.1</span> Creating return series<a href="data.html#creating-return-series" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Our futures data comes in the form of prices at each 15 minute interval. We captured critical interval prices, and created a daily return series that measures various time-to-close (t-15min, 30, 45, 60, 75, 90, 105 to 120min) ranging from t-15min to t-120min. In addition, we also created a daily return series measuring the open-to-t-15min and open-to-30min, as we’ll explore the day-of-return as independent variables.</p>
+<p>Finally, each of these return series is transformed into columns assigned to each day, such that for each day, we have returns of t-15-to-close, t-30-to-close, etc.</p>
+</div>
+<div id="combining-independent-variables-with-pricing-series" class="section level3 hasAnchor" number="3.2.2">
+<h3><span class="header-section-number">3.2.2</span> Combining independent variables with pricing series<a href="data.html#combining-independent-variables-with-pricing-series" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Since most of the independent variables are weekly or monthly, we have to backfill those data series with latest data available.</p>
+</div>
 </div>
 <div id="missing-value-analysis" class="section level2 hasAnchor" number="3.3">
 <h2><span class="header-section-number">3.3</span> Missing value analysis<a href="data.html#missing-value-analysis" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The data sets that we’ve chosen are all highly structured pricing, transaction, or survey data that have no missing data. However, there are mismatches in the data frequency between weekly or monthly to the daily return series that we are ultimately exploring.</p>
 
 </div>
 </div>

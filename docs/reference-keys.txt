@@ -4,7 +4,16 @@ research-topic
 data-availability
 data
 sources
+e-mini-futures
+net-positioning
+market-valuation
+market-volatility
+investor-sentiment
+federal-funds-rate
+ism-manufacturing-and-services-pmi-index
 cleaning-transformation
+creating-return-series
+combining-independent-variables-with-pricing-series
 missing-value-analysis
 results
 interactive-component
