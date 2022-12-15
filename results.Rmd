@@ -358,4 +358,4 @@ quantile(numlist)
 
 ### Other variables omitted
 
-We also looked into Fed Funds Rate and ISM Index, but neither showed much relationship with the closing returns.
+We also looked into Net Positioning, Fed Funds Rate and ISM Index, but neither showed much relationship with the closing returns.

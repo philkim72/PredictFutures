@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 3 Data | Predict Futures</title>
   <meta name="description" content="Chapter 3 Data | Predict Futures" />
-  <meta name="generator" content="bookdown 0.29 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.31 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 3 Data | Predict Futures" />
   <meta property="og:type" content="book" />
@@ -99,7 +99,15 @@
 </ul></li>
 <li class="chapter" data-level="4" data-path="results.html"><a href="results.html"><i class="fa fa-check"></i><b>4</b> Results</a>
 <ul>
-<li class="chapter" data-level="4.0.1" data-path="results.html"><a href="results.html#load-the-data"><i class="fa fa-check"></i><b>4.0.1</b> 1. Load the Data</a></li>
+<li class="chapter" data-level="4.1" data-path="results.html"><a href="results.html#by-day-of-week"><i class="fa fa-check"></i><b>4.1</b> By Day of Week</a></li>
+<li class="chapter" data-level="4.2" data-path="results.html"><a href="results.html#by-same-day-returns"><i class="fa fa-check"></i><b>4.2</b> By Same Day Returns</a></li>
+<li class="chapter" data-level="4.3" data-path="results.html"><a href="results.html#by-other-variables"><i class="fa fa-check"></i><b>4.3</b> By Other Variables</a>
+<ul>
+<li class="chapter" data-level="4.3.1" data-path="results.html"><a href="results.html#vix"><i class="fa fa-check"></i><b>4.3.1</b> VIX</a></li>
+<li class="chapter" data-level="4.3.2" data-path="results.html"><a href="results.html#net-bull-index"><i class="fa fa-check"></i><b>4.3.2</b> Net Bull Index</a></li>
+<li class="chapter" data-level="4.3.3" data-path="results.html"><a href="results.html#market-pe-ratio"><i class="fa fa-check"></i><b>4.3.3</b> Market P/E Ratio</a></li>
+<li class="chapter" data-level="4.3.4" data-path="results.html"><a href="results.html#other-variables-omitted"><i class="fa fa-check"></i><b>4.3.4</b> Other variables omitted</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="interactive-component.html"><a href="interactive-component.html"><i class="fa fa-check"></i><b>5</b> Interactive component</a></li>
 <li class="chapter" data-level="6" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>6</b> Conclusion</a></li>
@@ -186,7 +194,8 @@ Details: The ISM surveys is a monthly series, and we downloaded data all the way
 </div>
 <div id="missing-value-analysis" class="section level2 hasAnchor" number="3.3">
 <h2><span class="header-section-number">3.3</span> Missing value analysis<a href="data.html#missing-value-analysis" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>The data sets that we’ve chosen are all highly structured pricing, transaction, or survey data that have no missing data. However, there are mismatches in the data frequency between weekly or monthly to the daily return series that we are ultimately exploring.</p>
+<p>The data sets that we’ve chosen are all highly structured pricing, transaction, or survey data that have no missing data. All the pricing and market data, takes the latest date available. The only data point missing is the latest data for ISM/Services because the latest point wasn’t released.</p>
+<p><img src="finalproj_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
 
 </div>
 </div>

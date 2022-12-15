@@ -136,16 +136,16 @@
 <h2><span class="header-section-number">4.1</span> By Day of Week<a href="results.html#by-day-of-week" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>First set of plots we did was to show how each day’s closing returns differ by Day of the Week. We thought that perhaps Friday would have a different pattern if investors and traders were to close out their positions on a weekly basis.</p>
 <p>The first plot showed the final 15 minutes of return grouped by Day of the Week. Besides some larger variability on Thursdays there isn’t a clear distinction from this chart. most days have similar averages and ranges.
-<img src="finalproj_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<img src="finalproj_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
 <p>We thought that perhaps if we defined “closing” time as the final 30 minutes instead of 15 minutes we might have a different finding. This turns out to give us that Wedsnesdays during this past year have generally experienced lower average closing 30 minutes returns.</p>
-<p><img src="finalproj_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+<p><img src="finalproj_files/figure-html/unnamed-chunk-25-1.png" width="672" /></p>
 <p>If we stretched this out as long as final 60 minutes, the Wednesday pattern goes away, but there appears to be larger positive outliers.<br />
-<img src="finalproj_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<img src="finalproj_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
 </div>
 <div id="by-same-day-returns" class="section level2 hasAnchor" number="4.2">
 <h2><span class="header-section-number">4.2</span> By Same Day Returns<a href="results.html#by-same-day-returns" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>We thought that perhaps the day’s return would be a reason the closing return would be higher or lower. As it turns out if the returns earlier in the day is higher than 0.02, the closing return is usually lower. The vice versa is true for lower earlier returns to result in higher closing return. This is indicative of intraday mean reversion in return patterns.</p>
-<p><img src="finalproj_files/figure-html/unnamed-chunk-26-1.png" width="672" /></p>
+<p><img src="finalproj_files/figure-html/unnamed-chunk-35-1.png" width="672" /></p>
 </div>
 <div id="by-other-variables" class="section level2 hasAnchor" number="4.3">
 <h2><span class="header-section-number">4.3</span> By Other Variables<a href="results.html#by-other-variables" class="anchor-section" aria-label="Anchor link to header"></a></h2>
@@ -153,21 +153,21 @@
 <div id="vix" class="section level3 hasAnchor" number="4.3.1">
 <h3><span class="header-section-number">4.3.1</span> VIX<a href="results.html#vix" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>VIX is known as the fear index, and is a common indicator for the level of volatility and anxiety in the market. The following chart shows that the higher the index, the more variation we’re seeing in closing returns. This is not surprising in that higher return volatility should produce a wider range of closing returns. This is likely showing more correlation than causation.</p>
-<p><img src="finalproj_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
+<p><img src="finalproj_files/figure-html/unnamed-chunk-37-1.png" width="672" /></p>
 </div>
 <div id="net-bull-index" class="section level3 hasAnchor" number="4.3.2">
 <h3><span class="header-section-number">4.3.2</span> Net Bull Index<a href="results.html#net-bull-index" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>AAII’s Net Bull Sentiment is a net indicator of the AAII Bull Sentiment - AAII Bear Sentiment. It shows how “net” bullish investors are about the market We see below that when investors are net-bearish (negative values) the range of returns widen considerably.</p>
-<p><img src="finalproj_files/figure-html/unnamed-chunk-33-1.png" width="672" /></p>
+<p><img src="finalproj_files/figure-html/unnamed-chunk-42-1.png" width="672" /></p>
 </div>
 <div id="market-pe-ratio" class="section level3 hasAnchor" number="4.3.3">
 <h3><span class="header-section-number">4.3.3</span> Market P/E Ratio<a href="results.html#market-pe-ratio" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>P/E Ratio stands for Price to Earnings Ratio. The Market’s P/E Ratio is a pricing indicator to measure the valuation of the average market. When it’s lower, the market is pricing the earnings of the average company to be lower. The ratio is typically lower than the overall returns are lower to negative, and also consistent with that the lower the P/E Ratio is the wider closing returns appears to be.</p>
-<p><img src="finalproj_files/figure-html/unnamed-chunk-34-1.png" width="672" /></p>
+<p><img src="finalproj_files/figure-html/unnamed-chunk-43-1.png" width="672" /></p>
 </div>
 <div id="other-variables-omitted" class="section level3 hasAnchor" number="4.3.4">
 <h3><span class="header-section-number">4.3.4</span> Other variables omitted<a href="results.html#other-variables-omitted" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>We also looked into Fed Funds Rate and ISM Index, but neither showed much relationship with the closing returns.</p>
+<p>We also looked into Net Positioning, Fed Funds Rate and ISM Index, but neither showed much relationship with the closing returns.</p>
 
 </div>
 </div>
