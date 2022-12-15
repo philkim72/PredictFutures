@@ -198,7 +198,7 @@ p <- ggplot(eod_returns15, aes(x=Day_of_Week, y=Return)) + geom_boxplot()
 p
 ```
 ```{r}
-#THIS ONE SHOWS THAT THERE SEEMS TO BE LOWER END OF DAY RETURNS ON WEDNESDAYS
+#THIS ONE SHOWS THAT THERE SEEMS TO BE LOWER END OF DAY RETURNS ON WEDNESDAYS!
 library(ggplot2)
 eod_returns30 <- subset(eod_returns2, Return_Type == "t30_return" )
 p <- ggplot(eod_returns30, aes(x=Day_of_Week, y=Return)) + geom_boxplot()
