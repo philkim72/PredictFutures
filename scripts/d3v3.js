@@ -123,7 +123,7 @@ svg.append("circle")
 
 const green_circ = d3.select("svg")
   .selectAll("circle#green")
-  .data([55, 64, 76, 87]);
+  .data([53, 64, 76, 87]);
   
 green_circ.transition()
   .duration(3000)
