@@ -93,9 +93,17 @@ write.csv(price_df, "price.csv", row.names=FALSE)
 price_df
 ```
 
+## Description
+
+One of the most compelling and actionable observations is that the S&P futures returns in the last 15 minutes of trading exhibited mean reversion when there were extreme daily returns during market hours.  For instance, we observed that when the futures returned more than 2% from market open (09:00) to 15 mins before close (15:45), almost all (8 out of 10 observations) exhibited negative returns. Similarly, when the futures return was less than -2%, most of the returns (8 out of 12 observations) for the last 15 mins were positive.  
+
+To illustrate this observation, we have constructed an interactive graph that shows the actual price movements for 2 separate days: one where the daily return up to the last 15 minutes was greater than 2%, and another where the return was less than -2%.  The animated dots represent the closing price of each scenario reflecting the actual returns of the middle 5 observations.  
+
+## D3 Chart
+
 <script src="https://d3js.org/d3.v6.js""></script>
 
-<select id="selectButton"></select>
+<!-- <select id="selectButton"></select> -->
 
 <div id="plot"></div>
 

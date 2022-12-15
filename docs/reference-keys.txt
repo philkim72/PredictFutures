@@ -16,6 +16,12 @@ creating-return-series
 combining-independent-variables-with-pricing-series
 missing-value-analysis
 results
-load-the-data
+by-day-of-week
+by-same-day-returns
+by-other-variables
+vix
+net-bull-index
+market-pe-ratio
+other-variables-omitted
 interactive-component
 conclusion

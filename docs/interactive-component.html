@@ -109,7 +109,11 @@
 <li class="chapter" data-level="4.3.4" data-path="results.html"><a href="results.html#other-variables-omitted"><i class="fa fa-check"></i><b>4.3.4</b> Other variables omitted</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="interactive-component.html"><a href="interactive-component.html"><i class="fa fa-check"></i><b>5</b> Interactive component</a></li>
+<li class="chapter" data-level="5" data-path="interactive-component.html"><a href="interactive-component.html"><i class="fa fa-check"></i><b>5</b> Interactive component</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="interactive-component.html"><a href="interactive-component.html#description"><i class="fa fa-check"></i><b>5.1</b> Description</a></li>
+<li class="chapter" data-level="5.2" data-path="interactive-component.html"><a href="interactive-component.html#d3-chart"><i class="fa fa-check"></i><b>5.2</b> D3 Chart</a></li>
+</ul></li>
 <li class="chapter" data-level="6" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>6</b> Conclusion</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -132,14 +136,22 @@
             <section class="normal" id="section-">
 <div id="interactive-component" class="section level1 hasAnchor" number="5">
 <h1><span class="header-section-number">Chapter 5</span> Interactive component<a href="interactive-component.html#interactive-component" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="description" class="section level2 hasAnchor" number="5.1">
+<h2><span class="header-section-number">5.1</span> Description<a href="interactive-component.html#description" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>One of the most compelling and actionable observations is that the S&amp;P futures returns in the last 15 minutes of trading exhibited mean reversion when there were extreme daily returns during market hours. For instance, we observed that when the futures returned more than 2% from market open (09:00) to 15 mins before close (15:45), almost all (8 out of 10 observations) exhibited negative returns. Similarly, when the futures return was less than -2%, most of the returns (8 out of 12 observations) for the last 15 mins were positive.</p>
+<p>To illustrate this observation, we have constructed an interactive graph that shows the actual price movements for 2 separate days: one where the daily return up to the last 15 minutes was greater than 2%, and another where the return was less than -2%. The animated dots represent the closing price of each scenario reflecting the actual returns of the middle 5 observations.</p>
+</div>
+<div id="d3-chart" class="section level2 hasAnchor" number="5.2">
+<h2><span class="header-section-number">5.2</span> D3 Chart<a href="interactive-component.html#d3-chart" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <script src="https://d3js.org/d3.v6.js""></script>
 
-<select id="selectButton"></select>
+<!-- <select id="selectButton"></select> -->
 
 <div id="plot"></div>
 
 <script src="scripts/d3v3.js"></script>
 
+</div>
 </div>
             </section>
 

@@ -1,2 +1,16 @@
 # Conclusion
 
+The initial thesis that inspired this project was an observation that there seemed to be a short squeeze type of rally in S&P futures at the end of trading days on the very last day of the week.  One of the potential reasons that was posited was that traders with short positions would not want to be exposed over the weekend when potentially good news could be announced.  This was particularly true during the 2008 financial crisis when central banks were eager to support the markets and usually took action Sunday evenings.  
+
+However, based on our exploratory data and visualization efforts, we found that there were no significant differences in the end of day returns on Fridays vs the rest of the week.  In terms of patterns based on days of the week, the only thing we found was that end of day returns on Wednesdays appeared to be worse than the rest of the week.  Furthermore, after isolating each of the other independent variables to see what effect they might have on end of day returns, we made two additional observations.
+
+* When charting the end of day returns against rest of the day returns, we found that the returns were negatively correlated.  For instance, we observed that when the futures returned more than 2% from market open (09:00) to 15 mins before close (15:45), almost all (8 out of 10 observations) exhibited negative returns. Similarly, when the futures return was less than -2%, most of the returns (8 out of 12 observations) for the last 15 mins were positive. 
+
+* We found that the volatility of end of day returns were correlated to 3 independent factors:
+  + VIX (positive correlation)
+  + Net Bearish Sentiment (positive correlation)
+  + PE Ratio (negatively correlated)
+  
+Given that the VIX and Net Bearish sentiment are positively correlated and both are negatively correlation to PE ratio, this pattern seems to make sense. However this second observation is not actionable since the primary method of taking advantage of the higher volatility in end of day returns would be to buy options which would already be expensive since the VIX is at an elevated level.
+
+On the other hand, the first observation of mean reversion in the returns in the last 15 minutes is definitely actionable since you can simply go long or short the index to capture the expected positive returns.  Since there were only 22 instance in the past year of extreme returns in the beginning of the trading day, this may not be a viable primary trading strategy, but it could definitely serve as a supplementary trading strategy as part of a pool of diversified strategies.   
