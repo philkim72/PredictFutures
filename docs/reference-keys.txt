@@ -24,4 +24,6 @@ net-bull-index
 market-pe-ratio
 other-variables-omitted
 interactive-component
+description
+d3-chart
 conclusion
