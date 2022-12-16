@@ -116,16 +116,6 @@ svg.append("circle")
     .attr("cy", 320)
     .attr("r", 3)
     .style("fill", "red")
-
-// Bind Red Data then Transition
-const red_circ = d3.select("svg")
-  .selectAll("circle#red")
-  .data([322, 312, 308, 300, 296]);
-  
-red_circ.transition()
-  .duration(3000)
-  .attr("cx", 538)
-  .attr("cy", d => d)
     
 // Build Initial Green Circle
 g.append("circle")
@@ -169,13 +159,41 @@ svg.append("circle")
     .attr("cy", 52)
     .attr("r", 3)
     .style("fill", "green")
-
+    
 // Bind Green Data then Transition
 const green_circ = d3.select("svg")
   .selectAll("circle#green")
   .data([52, 62, 67, 76, 90]);
+
+// Bind Red Data then Transition
+const red_circ = d3.select("svg")
+  .selectAll("circle#red")
+  .data([322, 312, 308, 300, 296]);
+
+// Interactivity
+
+d3.select("svg")
+  .on("click", function () {
+    red_circ.transition()
+      .duration(3000)
+      .attr("cx", 538)
+      .attr("cy", d => d)    
+    green_circ.transition()
+      .duration(3000)
+      .attr("cx", 538)
+      .attr("cy", d => d)
+  });
+    
+
+
+
+
   
-green_circ.transition()
-  .duration(3000)
-  .attr("cx", 538)
-  .attr("cy", d => d)
+
+    
+
+    
+
+
+
+  

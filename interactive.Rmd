@@ -100,6 +100,7 @@ One of the most compelling and actionable observations is that the S&P futures r
 To illustrate this observation, we have constructed an interactive graph that shows the actual price movements for 2 separate days: one where the daily return up to the last 15 minutes was greater than 2%, and another where the return was less than -2%.  The animated dots represent the closing price of each scenario reflecting the actual returns of the middle 5 observations.  
 
 ## D3 Chart
+CLICK ANYWHERE ON THE CHART TO SEE THE POTENTIAL CLOSING PRICE OF EACH SCENARIO!
 
 <script src="https://d3js.org/d3.v6.js""></script>
 
